@@ -77,7 +77,7 @@ const html = `
       AwsWafIntegration.fetch('api/').then(response => {
         if (response.status == 200) {
           response.json().then(myJson => {
-            container.innerHTML = "Your IP address is " + myJson.ip + ", and you are coming from " + myJson.country + ". The request id associated with this api call is " + myJson.requestid};
+            container.innerHTML = "Your IP address is " + myJson.ip + ", and you are coming from " + myJson.country + ". The request id associated with this api call is " + myJson.requestid;
           });
         } else if (response.status == 405) {
           showMyCaptcha();
@@ -93,7 +93,7 @@ const html = `
       container.innerHTML = "";
       AwsWafIntegration.fetch('api/').then(response => {
         response.json().then(myJson => {
-          container.innerHTML = "Your IP address is " + myJson.ip + ", and you are coming from " + myJson.country + ". The request id associated with this api call is " + myJson.requestid};
+          container.innerHTML = "Your IP address is " + myJson.ip + ", and you are coming from " + myJson.country + ". The request id associated with this api call is " + myJson.requestid;
         });
       });
     }
