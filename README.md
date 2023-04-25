@@ -8,6 +8,7 @@ Steps to deploy the solution:
 git clone https://github.com/achrafsouk/spa-cross-domain-bot-control.git
 cd spa-cross-domain-bot-control
 npm install
+npm run build
 cdk bootstrap
 cdk deploy 
 ```
