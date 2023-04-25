@@ -252,5 +252,3 @@ export class SpaCrossDomainWafStack extends cdk.Stack {
 }
 
 
-
-/*
