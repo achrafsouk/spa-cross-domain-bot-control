@@ -5,27 +5,25 @@ import * as lambda from 'aws-cdk-lib/aws-lambda';
 import * as iam from 'aws-cdk-lib/aws-iam';
 import { Construct } from 'constructs';
 
-export interface crGetWafIntegrationURLProps {
-  Id: string,
-  Name: string,
-  Scope: string
+export interface helperCustomResourceProps {
+  Domain: string
 }
 
-export class crGetWafIntegrationURL extends Construct {
-  public readonly applicationIntegrationURL: string;
+export class helperCustomResource extends Construct {
+  public readonly apiKey: string;
+  public readonly captchaIntegrationURL: string;
 
 
-  constructor(scope: Construct, id: string, props: crGetWafIntegrationURLProps) {
+  constructor(scope: Construct, id: string, props: helperCustomResourceProps) {
     super(scope, id);
 
     const lambdaPolicy = new iam.PolicyDocument({
         statements: [
-  
           new iam.PolicyStatement({
             resources: [
-              `*`, // TODO improve
+              "*",
             ],
-            actions: ["wafv2:*"], // TODO improve
+            actions: ["wafv2:ListAPIKeys", "wafv2:CreateAPIKey"], 
           }),
         ],
       });
@@ -34,7 +32,7 @@ export class crGetWafIntegrationURL extends Construct {
       "service-role/AWSLambdaBasicExecutionRole"
     );
 
-    const lambdaRole = new iam.Role(this, "TriggerLERole", {
+    const lambdaRole = new iam.Role(this, "crLambdaRole", {
       assumedBy: new iam.CompositePrincipal(
         new iam.ServicePrincipal("lambda.amazonaws.com")
       ),
@@ -47,24 +45,25 @@ export class crGetWafIntegrationURL extends Construct {
         myPolicy: lambdaPolicy,
       },
     });
-
-    const onEvent = new lambda.SingletonFunction(this, 'Singleton', {
-      uuid: 'f7d4f730-4ee1-11e8-9c2d-fa7ae01bbebc',      
+// todo update runtime
+    const onEvent = new lambda.SingletonFunction(this, 'crSingleton', {
+      uuid: 'f7d4d730-dhd1-22hge8-9c2d-fnbebdjdh',     
       runtime: lambda.Runtime.NODEJS_16_X,
-      handler: "custom_resource.handler",
+      handler: "index.handler",
       timeout: cdk.Duration.seconds(60),
-      code: lambda.Code.fromAsset("lambda"),
+      code: lambda.Code.fromAsset("lambda/custom-resource"),
       role: lambdaRole,
     });
 
-    const myProvider = new cr.Provider(this, 'MyProvider', {
+    const myProvider = new cr.Provider(this, 'crProvider', {
       onEventHandler: onEvent,
       logRetention: logs.RetentionDays.ONE_DAY  
     });
 
-    const resource = new cdk.CustomResource(this, 'Resource1', { serviceToken: myProvider.serviceToken, properties: props });
+    const resource = new cdk.CustomResource(this, 'crResource', { serviceToken: myProvider.serviceToken, properties: props });
 
-    this.applicationIntegrationURL = resource.getAtt('ApplicationIntegrationURL').toString();
+    this.apiKey = resource.getAtt('APIKey').toString();
+    this.captchaIntegrationURL = resource.getAtt('CaptchaIntegrationURL').toString();
 
   }
 }
