@@ -5,7 +5,7 @@
     "spa-cross-domain-waf": "bin/spa-cross-domain-waf.js"
   },
   "scripts": {
-    "prebuild": "npm install aws-sdk --prefix lambda/origin/ --platform=linux --arch=x64",
+    "prebuild": "npm install aws-sdk --prefix lambda/custom-resource/ --platform=linux --arch=x64",
     "build": "tsc",
     "watch": "tsc -w",
     "test": "jest",
