@@ -224,7 +224,7 @@ export class SpaCrossDomainWafStack extends cdk.Stack {
             defaultBehavior: {
                 origin: new origins.S3Origin(spaBucket),
                 viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
-                cachePolicy: cloudfront.CachePolicy.CACHING_DISABLED, //TODO
+                cachePolicy: cloudfront.CachePolicy.CACHING_OPTIMIZED,
             },
             additionalBehaviors: {
                 'api/*': {
