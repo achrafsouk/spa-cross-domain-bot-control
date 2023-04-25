@@ -239,7 +239,6 @@ export class SpaCrossDomainWafStack extends cdk.Stack {
         });
         const wafSDKCalls = new helperCustomResource(this, 'customResource', {
             Domain: cloudfrontDistribution.distributionDomainName,
-            ARN: webACL.attrArn
         });
         new s3deploy.BucketDeployment(this, 'DeployWebsite', {
             sources: [s3deploy.Source.data('index.html', html.replace('CAPTCHAURLPLACEHOLDER', wafSDKCalls.captchaIntegrationURL).replace('APIKEYPLACEHOLDER', wafSDKCalls.apiKey))],
